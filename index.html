@@ -1,0 +1,146 @@
+BRDL
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Doubt Solver</title>
+    <style>
+        body {
+            font-family: Cursive, sans-serif;
+            background-color: #f9f9f9;
+            text-align: center;
+            margin: 50px;
+        }
+        input, select {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+        #successMessage {
+            display: none;
+            color: green;
+            margin-top: 20px;
+        }
+        .subject-select {
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🧠 Ask Your Doubt 🤔</h1>
+    <p>Enter your question and select your preferences for a personalized experience.</p>
+
+    <form id="doubtForm">
+        <input type="text" id="question" placeholder="Enter your doubt..." required><br>
+        
+        <!-- Dropdown for Grade -->
+        <select id="grade" onchange="updateSubjects()" required>
+            <option value="">Select Your Grade</option>
+            <option value="1">Grade 1</option>
+            <option value="2">Grade 2</option>
+            <option value="3">Grade 3</option>
+            <option value="4">Grade 4</option>
+            <option value="5">Grade 5</option>
+            <option value="6">Grade 6</option>
+            <option value="7">Grade 7</option>
+            <option value="8">Grade 8</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+        </select><br>
+
+        <!-- Dynamic Subject Dropdown -->
+        <select id="subject" required>
+            <option value="">Select Subject</option>
+        </select><br>
+
+        <!-- Checkbox for Visuals and Fun Explanations -->
+        <label>
+            <input type="checkbox" id="funExplanations" checked>
+              Concept Explanation
+        </label><br>
+         <label>
+            <input type="checkbox" id="schoolquestion" >
+            school question
+        </label><br>
+
+        <button type="button" onclick="solveDoubt()">Go</button>
+    </form>
+
+    <p id="successMessage">✔️ Prompt copied to clipboard!
+        Please paste it in ChatGPT for solving doubts!</p>
+
+    <script>
+        // Subject data according to NCERT syllabus
+        const subjectsData = {
+            1: ["English", "Hindi", "Mathematics", "EVS"],
+            2: ["English", "Hindi", "Mathematics", "EVS"],
+            3: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Urdu"],
+            4: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Urdu"],
+            5: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Urdu"],
+            6: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Urdu"],
+            7: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Urdu"],
+            8: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Urdu"],
+            9: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Sanskrit", "Urdu"],
+            10: ["English", "Hindi", "Mathematics", "Science", "Social Science", "Sanskrit", "Computer", "Urdu"],
+            11: ["Physics", "Chemistry", "Biology", "Mathematics", "Computer Science", "Accountancy", "Business Studies", "Economics", "History", "Political Science", "Geography","Sociology" ,"Phychology","Art History", "Urdu","Home science","CCT","Graphic Design","Computer science","Physical Education","Applied mathematics","English","Hindi","Bio Technology"],
+            12: ["Physics", "Chemistry", "Biology", "Mathematics", "Computer Science", "Accountancy", "Business Studies", "Economics", "History", "Political Science", "Geography","Sociology" ,"Phychology","Art History", "Urdu","Home science","CCT","Graphic Design","Computer science","Physical Education","Applied mathematics","English","Hindi","Bio Technology"]
+        };
+
+        function updateSubjects() {
+            const grade = document.getElementById("grade").value;
+            const subjectSelect = document.getElementById("subject");
+            subjectSelect.innerHTML = "<option value=''>Select Subject</option>"; // Reset options
+
+            // For grades 1-10, use subjectsData directly
+            if (grade > 0) {
+                subjectsData[grade].forEach(subject => {
+                    const option = document.createElement("option");
+                    option.value = subject;
+                    option.textContent = subject;
+                    subjectSelect.appendChild(option);
+                });
+            }
+        }
+
+        function solveDoubt() {
+            const question = document.getElementById("question").value;
+            const grade = document.getElementById("grade").value;
+            const subject = document.getElementById("subject").value;
+            const funExplanations = document.getElementById("funExplanations").checked;
+            const schoolquestion = document.getElementById("schoolquestion").checked;
+
+            // Prepare the prompt
+            let prompt = `Student in Grade ${grade} has a question about ${subject}: "${question}" explain it in detail as you are a teacher of the student.`;
+            if (funExplanations) {
+                prompt += " Please use visuals and fun concepts for the explanation.";
+            }
+            if (schoolquestion) {
+                prompt += "Solve my doubts as i can understand and can write in my exam to the solution.";
+            }
+
+            // Copy the prompt to clipboard
+            navigator.clipboard.writeText(prompt).then(() => {
+                document.getElementById("successMessage").style.display = "block";
+                // Open ChatGPT in a new window with the prepared prompt
+                window.open(`https://chat.openai.com/?prompt=${encodeURIComponent(prompt)}`);
+            }).catch(err => {
+                console.error("Failed to copy prompt: ", err);
+            });
+        }
+    </script>
+
+</body>
+</html>
